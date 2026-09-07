@@ -1,0 +1,13 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /api/v1
+
+spring:
+  application:
+    name: ingress-service
+    
+security:
+  jwt:
+    secret-key: ${JWT_SECRET_KEY:my-default-secret-key-only-for-local-dev-1234567890}
+    expiration-time-ms: ${JWT_EXPIRATION_TIME_MS:7200000}
