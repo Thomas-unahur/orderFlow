@@ -27,7 +27,11 @@ public class JwtProvider {
     public Boolean isValidToken(String token) {
         try {
             Claims claims = getClaims(token);
-            return !claims.getExpiration().before(new Date());
+            Date expiration = claims.getExpiration();
+            if (expiration == null) {
+                return false;
+            }
+            return !expiration.before(new Date());
         } catch (JwtException | IllegalArgumentException e) {
             return false;
         }

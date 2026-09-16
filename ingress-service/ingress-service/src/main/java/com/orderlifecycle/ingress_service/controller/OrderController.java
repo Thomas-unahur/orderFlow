@@ -21,7 +21,8 @@ public class OrderController {
     private final OrderIngressService orderIngressService;
 
     @PostMapping
-    public ResponseEntity<String> receiveOrder(@Valid @RequestBody OrderRequest orderRequest, @AuthenticationPrincipal String userId) {
+    public ResponseEntity<String> receiveOrder(@Valid @RequestBody OrderRequest orderRequest,
+            @AuthenticationPrincipal String userId) {
         orderIngressService.processOrder(orderRequest, userId);
         return ResponseEntity.accepted().body("Order in progress");
     }

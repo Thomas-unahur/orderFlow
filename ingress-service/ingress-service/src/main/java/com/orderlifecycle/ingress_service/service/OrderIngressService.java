@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.orderlifecycle.ingress_service.dto.OrderEvent;
 import com.orderlifecycle.ingress_service.dto.OrderRequest;
 import com.orderlifecycle.ingress_service.dto.enums.OrderStatus;
+import com.orderlifecycle.ingress_service.publisher.OrderPublisher;
 import com.orderlifecycle.ingress_service.utils.ScaleNormalizerUtil;
 
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class OrderIngressService {
     private final ScaleNormalizerUtil scaleNormalizerUtil;
+    private final OrderPublisher orderPublisher;
 
     public void processOrder(OrderRequest orderRequest, String userId) {
         var normalizedPrice = scaleNormalizerUtil.normalize(orderRequest.price(), orderRequest.symbol());
@@ -39,6 +41,8 @@ public class OrderIngressService {
                 normalizedPrice,
                 OrderStatus.PENDING,
                 timestampNanos);
+
+        orderPublisher.publishOrder(orderEvent);
 
         log.info("New order event created: {}", orderEvent);
     }
