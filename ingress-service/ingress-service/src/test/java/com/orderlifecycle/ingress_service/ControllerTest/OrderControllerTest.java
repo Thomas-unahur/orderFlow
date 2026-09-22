@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.orderlifecycle.ingress_service.controller.OrderController;
 import com.orderlifecycle.ingress_service.dto.OrderRequest;
 import com.orderlifecycle.ingress_service.security.JwtAuthFilter;
+import com.orderlifecycle.ingress_service.security.JwtProvider;
 import com.orderlifecycle.ingress_service.service.OrderIngressService;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -48,6 +49,9 @@ public class OrderControllerTest {
 
     @MockitoBean
     private OrderIngressService orderIngressService;
+
+    @MockitoBean
+    private JwtProvider jwtProvider;
 
     @Test
     @DisplayName("Should return 202 Accepted and invoke ingress service when request payload is valid")

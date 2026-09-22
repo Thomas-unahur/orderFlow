@@ -87,3 +87,21 @@ The Ingress Service is a microservice designed to act as the primary entry point
 - Normalizes order quantities and prices utilizing `ScaleNormalizerUtil`.
 - Generates a unique tracking ID (`UUID`) and calculates a high-precision timestamp (nanoseconds).
 - Constructs an immutable `OrderEvent` representing the ingested order, ready for downstream processing.
+
+### KafkaOrderTopic
+**Purpose:** A Spring configuration class for defining Kafka topics.
+**Responsibilities:**
+- Creates a `NewTopic` bean for the `orders` topic.
+- Configures the topic with 10 partitions and a replication factor of 1 to enable scalable event streaming.
+
+### OrderPublisher
+**Purpose:** A component responsible for publishing order events to a Kafka topic.
+**Responsibilities:**
+- Utilizes Spring's `KafkaTemplate` to send `OrderEvent` messages to the `orders` topic.
+- Uses the order's symbol as the message key to guarantee ordered processing of events for the same financial instrument.
+
+### docker-compose.yaml
+**Purpose:** Defines the local containerized infrastructure required for the application's messaging capabilities.
+**Responsibilities:**
+- Provisions a local Apache Kafka broker/controller instance for event streaming.
+- Sets up a Kafka UI container for visual monitoring, management, and debugging of Kafka clusters and topics.
