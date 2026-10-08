@@ -80,6 +80,6 @@ El ciclo de vida completo de una orden de compra limitada sobre acciones de Micr
 *   El Ledger actualiza de manera atómica las billeteras definitivas: se debitan los fondos retenidos del Quote Asset (-USD) y se acreditan las acciones adquiridas del Base Asset (+MSFT).
 
 #### Fase 5: Post-Trade y Notificación (WebSockets)
-*   Una vez realizada la liquidación, el motor central (Core Engine) publica un evento asíncrono de "Orden Ejecutada" hacia el puente de mensajería (Broker)[cite: 1].
-*   La Ingress API consume ese evento de liquidación desde el broker[cite: 1].
-*   Finalmente, la Ingress API envía los datos hacia el cliente utilizando WebSockets, lo cual permite notificar el estado de la ejecución y la actualización de los balances en tiempo real[cite: 1].
+*   Una vez realizada la liquidación, el motor central (Core Engine) publica un evento asíncrono de "Orden Ejecutada" hacia el puente de mensajería (Broker).
+*   La Ingress API consume ese evento de liquidación desde el broker.
+*   Finalmente, la Ingress API envía los datos hacia el cliente utilizando WebSockets, lo cual permite notificar el estado de la ejecución y la actualización de los balances en tiempo real.
