@@ -56,30 +56,30 @@ El ciclo de vida completo de una orden de compra limitada sobre acciones de Micr
 
 ### Detalle de Fases
 
-#### Fase 1: Recepción (Ingress API)
+#### Fase 1: Recepción (Ingress API)  (Implementado)
 *   El Usuario envía una petición REST HTTP POST enviando una orden Limit BUY MSFT (1 acción) a precio X.
 *   La Ingress API valida las credenciales de seguridad mediante el token JWT.
 *   La Ingress API valida el formato y la precisión de los campos numéricos utilizando `BigDecimal` y reglas de escala estandarizada.
 
-#### Fase 2: Encolamiento (Message Broker)
+#### Fase 2: Encolamiento (Message Broker) (Implementado)
 *   La Ingress API publica de forma asíncrona el evento "Orden Creada" hacia el Message Broker.
 *   El Message Broker procesa la inserción y devuelve una confirmación (Ack).
 *   La Ingress API responde de inmediato al Usuario con un código HTTP 202 ("Orden en proceso"), liberando el hilo HTTP y garantizando baja latencia.
 
-#### Fase 3: Riesgo Pre-Trade (Core Engine & Ledger)
+#### Fase 3: Riesgo Pre-Trade (Core Engine & Ledger) (En proceso)
 *   El Core Engine consume de manera asíncrona el evento desde el broker en segundo plano.
 *   El Core Engine consulta en la base de datos MySQL Ledger el balance disponible del Quote Asset (USD).
 *   El Ledger confirma la suficiencia de fondos.
 *   El Core Engine ejecuta un bloqueo transaccional estricto (ACID), reteniendo temporalmente los fondos necesarios en la billetera del usuario (`lockedBalance`).
 
-#### Fase 4: Matching y Settlement (Order Book & Ledger)
+#### Fase 4: Matching y Settlement (Order Book & Ledger) (Planificado)
 *   El Core Engine inyecta la orden validada dentro del nivel correspondiente de los Bids de MSFT en el Order Book ubicado en memoria RAM.
 *   El motor busca coincidencias activas priorizando precio y orden de llegada (FIFO).
 *   Se encuentra una contraparte compatible, generando de forma inmediata un registro inmutable de ejecución (Trade).
 *   Se dispara la liquidación definitiva (Settlement) hacia la base de datos MySQL Ledger.
 *   El Ledger actualiza de manera atómica las billeteras definitivas: se debitan los fondos retenidos del Quote Asset (-USD) y se acreditan las acciones adquiridas del Base Asset (+MSFT).
 
-#### Fase 5: Post-Trade y Notificación (WebSockets)
+#### Fase 5: Post-Trade y Notificación (WebSockets) (Planificado)
 *   Una vez realizada la liquidación, el motor central (Core Engine) publica un evento asíncrono de "Orden Ejecutada" hacia el puente de mensajería (Broker).
 *   La Ingress API consume ese evento de liquidación desde el broker.
 *   Finalmente, la Ingress API envía los datos hacia el cliente utilizando WebSockets, lo cual permite notificar el estado de la ejecución y la actualización de los balances en tiempo real.
