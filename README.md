@@ -17,7 +17,7 @@ El diseño de la plataforma se divide en tres componentes principales para garan
     *   **Stack:** Java 21, Spring Boot, Spring Security, JWT.
     *   **Responsabilidad:** Actúa como la puerta de entrada segura. Recibe la petición REST del usuario, valida el token JWT, aplica reglas estrictas de validación de formato (normalización de escalas con `BigDecimal`) y delega el procesamiento publicando un evento asíncrono. Es un componente *stateless* (sin base de datos propia), lo que le permite escalar horizontalmente para recibir miles de peticiones sin bloqueos.
 *   **Caja 2: El Puente Asíncrono (Infraestructura - Message Broker)**
-    *   **Stack:** Apache Kafka / RabbitMQ.
+    *   **Stack:** Apache Kafka.
     *   **Responsabilidad:** Garantiza la persistencia temporal de los eventos. Desacopla la velocidad de ingesta (Caja 1) del procesamiento pesado del núcleo (Caja 3). Funciona como un amortiguador (*buffer*) que evita la pérdida de datos ante picos de tráfico extremos o caídas temporales del motor de emparejamiento.
 *   **Caja 3: El Cerebro (Microservicio Privado - Core Engine)**
     *   **Stack:** Java 21 con concurrencia avanzada, Spring Data JPA, MySQL Ledger.
